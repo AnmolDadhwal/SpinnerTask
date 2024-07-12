@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.task.spinnertask.databinding.ActivityMainBinding
+import com.task.spinnertask.databinding.CustomdialogBinding
 
 class MainActivity : AppCompatActivity() {
     private var binding:ActivityMainBinding?=null
@@ -50,24 +49,22 @@ class MainActivity : AppCompatActivity() {
             position: Int,
             id: Long
         ) {
-           // var selectedItem=binding?.spStatic?.selectedItem as String
-            //Toast.makeText(this@MainActivity,"Selected item $position $selectedItem",Toast.LENGTH_SHORT).show()
         }
         override fun onNothingSelected(parent: AdapterView<*>?) {
         }
     }
         binding?.btnAdd?.setOnClickListener {
-            var dialog=Dialog(this)
-            dialog.setContentView(R.layout.customdialog)
+            var dialogBinding=CustomdialogBinding.inflate(layoutInflater)
+            var dialog=Dialog(this).apply{
+                setContentView(dialogBinding.root)
+                show()
+            }
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT)
-            var btnSubmit=dialog.findViewById<Button>(R.id.btnSubmit)
-            var etName=dialog.findViewById<EditText>(R.id.etName)
-            btnSubmit.setOnClickListener {
-                if (etName?.text?.toString()?.trim().isNullOrEmpty()){
-                    etName?.error="Enter Anything"
+            dialogBinding.btnSubmit.setOnClickListener {
+                if (dialogBinding.etName.text?.toString()?.trim().isNullOrEmpty()){
+                    dialogBinding.etName.error="Enter Anything"
                 }else{
-                    spinnerValue.add(etName.text.toString().trim())
-                    arrayAdapter.notifyDataSetChanged()
+                    spinnerValue.add(dialogBinding.etName.text.toString().trim())
                     dialog.dismiss()
                 }
             }
